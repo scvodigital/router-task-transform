@@ -1,0 +1,48 @@
+{
+  "name": "@scvo/router-task-transform",
+  "version": "0.0.1",
+  "description": "SCVO=>Router task to transform JSON",
+  "main": "./build/index",
+  "typings": "./build/index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cleanup": "rm -rf ./dist",
+    "build": "npm run cleanup;tsc",
+    "prepublishOnly": "npm run build",
+    "local": "npm link @scvo/router && npm run compile && npm link",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check",
+    "pub-patch": "yarn add -E @scvo/router; git commit -a -m \"Upgraded router\"; nuup patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scvodigital/router-task-elasticsearch.git"
+  },
+  "keywords": [
+    "SCVO=>Router",
+    "SCVO",
+    "Router",
+    "Elasticsearch",
+    "Connector"
+  ],
+  "author": "Matthew Wilkes (SCVO)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/scvodigital/router-task-elasticsearch/issues"
+  },
+  "homepage": "https://github.com/scvodigital/router-task-elasticsearch#readme",
+  "dependencies": {
+    "@scvo/router": "^1.1.30",
+    "node-json-transform": "^1.0.16"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.6",
+    "gts": "^0.5.4",
+    "typescript": "~2.6.1"
+  }
+}
