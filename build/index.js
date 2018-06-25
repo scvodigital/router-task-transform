@@ -46,7 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable:no-any */
-//import DataTransform = require('node-json-transform').DataTransform;
+var DataTransform = require("node-json-transform");
 var router_1 = require("@scvo/router");
 var TransformRouterTask = /** @class */ (function (_super) {
     __extends(TransformRouterTask, _super);
@@ -57,9 +57,15 @@ var TransformRouterTask = /** @class */ (function (_super) {
     }
     TransformRouterTask.prototype.execute = function (routeMatch, task) {
         return __awaiter(this, void 0, void 0, function () {
-            var data;
+            var data, maps, i, map, transformer;
             return __generator(this, function (_a) {
-                data = {};
+                data = JSON.parse(JSON.stringify(routeMatch));
+                maps = Array.isArray(task.config) ? task.config : [task.config];
+                for (i = 0; i < maps.length; ++i) {
+                    map = maps[i];
+                    transformer = DataTransform.DataTransform(data, map);
+                    data = transformer.transform();
+                }
                 return [2 /*return*/, data];
             });
         });
