@@ -57,9 +57,28 @@ var TransformRouterTask = /** @class */ (function (_super) {
     }
     TransformRouterTask.prototype.execute = function (routeMatch, task) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, maps, i, map, transformer;
+            var cache, data, maps, i, map, transformer;
             return __generator(this, function (_a) {
-                data = JSON.parse(JSON.stringify(routeMatch));
+                cache = [];
+                data = JSON.parse(JSON.stringify(routeMatch, function (key, value) {
+                    if (typeof value === 'object' && value !== null) {
+                        if (cache.indexOf(value) !== -1) {
+                            // Duplicate reference found
+                            try {
+                                // If this value does not reference a parent it can be deduped
+                                return JSON.parse(JSON.stringify(value));
+                            }
+                            catch (error) {
+                                // discard key if value cannot be deduped
+                                return;
+                            }
+                        }
+                        // Store value in our collection
+                        cache.push(value);
+                    }
+                    return value;
+                }));
+                cache = [];
                 maps = Array.isArray(task.config) ? task.config : [task.config];
                 for (i = 0; i < maps.length; ++i) {
                     map = maps[i];

@@ -11,7 +11,25 @@ export class TransformRouterTask extends RouterTask {
 
   async execute(routeMatch: RouteMatch, task: RouteTaskConfiguration):
       Promise<any> {
-    let data = JSON.parse(JSON.stringify(routeMatch));
+    let cache: string[] = [];
+    let data = JSON.parse(JSON.stringify(routeMatch, (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (cache.indexOf(value) !== -1) {
+          // Duplicate reference found
+          try {
+            // If this value does not reference a parent it can be deduped
+            return JSON.parse(JSON.stringify(value));
+          } catch (error) {
+            // discard key if value cannot be deduped
+            return;
+          }
+        }
+        // Store value in our collection
+        cache.push(value);
+      }
+      return value;
+    }));
+    cache = [];
     const maps = Array.isArray(task.config) ? task.config : [task.config];
 
     for (let i = 0; i < maps.length; ++i) {
